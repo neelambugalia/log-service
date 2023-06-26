@@ -1,0 +1,24 @@
+spring:
+  application:
+    name: Log Application
+
+  thymeleaf:
+    cache: false
+    enabled: true
+    prefix: classpath:/templates/
+    suffix: .html
+
+  datasource:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    username: root
+    password: root
+    dialect: MYSQL
+
+  liquibase:
+    enabled: true
+    change-log: 'classpath:db/liquibase-changelog.xml'
+
+server:
+  port: 9090
+
+

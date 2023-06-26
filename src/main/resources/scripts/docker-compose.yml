@@ -1,0 +1,16 @@
+version: "3.8"
+
+services:
+
+  tester:
+    container_name: tester
+    build: .
+    image: tester-new
+    networks:
+      - log-network
+
+networks:
+  log-network:
+    driver: bridge
+    external: true
+

@@ -1,0 +1,49 @@
+version: "3.8"
+
+services:
+
+  server:
+    container_name: server
+    depends_on:
+      - db
+    build: .
+    restart: on-failure
+    ports:
+      - "9090:9090"
+    networks:
+      - log-network
+    environment:
+      SPRING_APPLICATION_JSON: '{
+        "spring.datasource.url" : "jdbc:mysql://db:3306/logdb?allowPublicKeyRetrieval=true&autoReconnect=true&createDatabaseIfNotExist=true&useSSL=false"
+      }'
+    volumes:
+      - .m2:/root/.m2
+    stdin_open: true
+    tty: true
+
+  db:
+    container_name: db
+    image: mysql:8.0.17
+    restart: unless-stopped
+    volumes:
+      - db:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: logdb
+    ports:
+      - "3308:3306" #logdb
+    healthcheck:
+      test: [ "CMD-SHELL", " mysqladmin -u root -proot ping --silent" ]
+      interval: 1s
+      timeout: 3s
+      retries: 3
+    networks:
+      - log-network
+
+volumes:
+  db:
+
+networks:
+  log-network:
+    driver: bridge
+    external: true
